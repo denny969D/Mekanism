@@ -34,7 +34,12 @@ public class FrequencyControllerManager {
 
     @SuppressWarnings("unchecked")
     public static <FREQ extends Frequency> FrequencyController<FREQ> getController(FrequencyType<FREQ> frequencyType) {
-        return (FrequencyController<FREQ>) controllers.get(frequencyType);
+        FrequencyController<FREQ> controller = (FrequencyController<FREQ>) controllers.get(frequencyType);
+        if (controller == null) {
+            controller = FrequencyController.create(frequencyType);
+            controllers.put(frequencyType, controller);
+        }
+        return controller;
     }
 
     protected static <FREQ extends Frequency> FrequencyLookup<FREQ> createLookup(FrequencyType<FREQ> frequencyType, @Nullable UUID uuid, SecurityMode securityMode, Codec<FrequencyLookup<FREQ>> codec) {
