@@ -159,6 +159,16 @@ public class BlockBounding extends Block implements IHasTileEntity<TileEntityBou
     public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, ItemStack toolStack, boolean willHarvest,
           FluidState fluidState) {
         if (willHarvest) {
+            BlockPos mainPos = getMainBlockPos(world, pos);
+            if (mainPos != null) {
+                BlockState mainState = world.getBlockState(mainPos);
+                if (!mainState.isAir()) {
+                    // generate drops
+                    mainState.getBlock().playerDestroy(world, player, mainPos, mainState, WorldUtils.getTileEntity(world, mainPos), toolStack);
+                    // actually remove controller
+                    mainState.onDestroyedByPlayer(world, mainPos, player, toolStack, false, mainState.getFluidState());
+                }
+            }
             return true;
         }
         BlockPos mainPos = getMainBlockPos(world, pos);
