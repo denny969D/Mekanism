@@ -73,7 +73,7 @@ public class ChemicalUtils {
         long amount = chemicalTank.amountAsLong();
         long toDump = 0;
         if (dumpMode == GasMode.DUMPING) {
-            toDump = dumpingAmount;
+            toDump = Math.min(dumpingAmount, amount);
         } else {//DUMPING_EXCESS
             //Don't allow dumping more than the configured amount
             long targetLevel = MathUtils.clampToLong(chemicalTank.capacityAsLong(chemicalType) * MekanismConfig.general.dumpExcessKeepRatio.get());
